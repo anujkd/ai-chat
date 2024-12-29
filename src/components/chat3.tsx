@@ -1,21 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Menu, Plus, Paperclip, ImageIcon, Send, User, Sun, Moon } from "lucide-react";
+import { Menu, Plus, Paperclip, ImageIcon, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import Sidebar from "./Sidebar";
+import UserDropdown from "./UserDropdown";
 
 // Types
 interface Message {
@@ -31,18 +19,6 @@ interface ChatHistory {
   date: string;
 }
 
-interface SidebarProps {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  chatHistory: ChatHistory[];
-  showAllHistory: boolean;
-  setShowAllHistory: (show: boolean) => void;
-}
-
-interface UserDropdownProps {
-  toggleTheme: (theme: "light" | "dark") => void;
-}
-
 const LoadingIndicator = () => (
   <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg max-w-[80%]">
     <div className="flex gap-1">
@@ -52,66 +28,6 @@ const LoadingIndicator = () => (
     </div>
     <span className="text-sm text-gray-500 dark:text-gray-400">AI is thinking...</span>
   </div>
-);
-
-const Sidebar = ({
-  isOpen,
-  setIsOpen,
-  chatHistory,
-  showAllHistory,
-  setShowAllHistory,
-}: SidebarProps) => (
-  <Sheet open={isOpen} onOpenChange={setIsOpen}>
-    <SheetContent side="left" className="w-64 p-0">
-      <SheetHeader className="p-4">
-        <SheetTitle>Chat History</SheetTitle>
-      </SheetHeader>
-      <div className="p-4">
-        <div className="space-y-2">
-          {chatHistory.slice(0, showAllHistory ? undefined : 4).map((chat) => (
-            <div
-              key={chat.id}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer"
-            >
-              <div className="text-sm font-medium dark:text-white">{chat.title}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{chat.date}</div>
-            </div>
-          ))}
-        </div>
-        {chatHistory.length > 4 && (
-          <Button
-            variant="ghost"
-            className="mt-4 w-full text-sm"
-            onClick={() => setShowAllHistory(!showAllHistory)}
-          >
-            {showAllHistory ? "Show Less" : "Show More"}
-          </Button>
-        )}
-      </div>
-    </SheetContent>
-  </Sheet>
-);
-
-const UserDropdown = ({ toggleTheme }: UserDropdownProps) => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant="ghost" size="icon">
-        <User className="h-5 w-5" />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" className="w-48">
-      <DropdownMenuLabel>Theme</DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={() => toggleTheme("light")} className="cursor-pointer">
-        <Sun className="mr-2 h-4 w-4" />
-        <span>Light Mode</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => toggleTheme("dark")} className="cursor-pointer">
-        <Moon className="mr-2 h-4 w-4" />
-        <span>Dark Mode</span>
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
 );
 
 const Chat = () => {
